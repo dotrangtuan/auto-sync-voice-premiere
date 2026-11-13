@@ -1,0 +1,5 @@
+# NVIDIA Windows x64 runtime wheels; separate from the CPU installation.
+nvidia-cuda-runtime-cu12==12.4.127
+nvidia-cuda-nvrtc-cu12==12.4.127
+nvidia-cublas-cu12==12.4.5.8
+nvidia-cudnn-cu12==9.10.2.21

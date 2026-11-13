@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Auto Sync Voice</title><link rel="stylesheet" href="style.css"></head>
+<body><header><div class="badge">PREMIERE PRO · 0.4.0 BETA</div><h1>Auto Sync Voice</h1><p>Ảnh theo lời đọc. Timeline để bạn chỉnh tiếp.</p><div id="hostInfo" class="muted">Đang kết nối Premiere…</div></header>
+<main>
+<section><h2>01 <span>Nguồn dựng</span></h2>
+<label>Tên sequence<input id="name" value="Auto Sync Voice" maxlength="120"></label>
+<label>Voice<div class="pick"><input id="audio" placeholder="Chọn WAV, MP3, M4A…"><button data-pick="audio">Chọn</button></div></label>
+<label>Thư mục ảnh / video<div class="pick"><input id="mediaDir" placeholder="001.png, 002.png, 003.mp4…"><button data-pick="mediaDir">Chọn</button></div></label>
+<div class="row"><label>Độ phân giải<select id="size"><option value="1920x1080">1920 × 1080 · 16:9</option><option value="1280x720">1280 × 720 · 16:9</option><option value="1080x1920">1080 × 1920 · 9:16</option></select></label><label>FPS<select id="fps"><option>24</option><option>25</option><option selected>30</option><option>60</option></select></label></div>
+</section>
+<section><h2>02 <span>Căn thời gian</span></h2>
+<label>Cách đồng bộ<select id="mode"><option value="transcript">Transcript + Whisper</option><option value="timed">Timestamp SRT / JSON có sẵn</option><option value="equal">Chia đều theo voice</option></select></label>
+<div id="transcriptFields"><label id="fileLabel">File transcript<div class="pick"><input id="transcriptPath" placeholder="TXT, SRT hoặc JSON"><button data-pick="transcriptPath">Chọn</button><button id="clearTranscript" title="Bỏ file để dùng văn bản dán">×</button></div></label>
+<div id="textFields"><label>Hoặc dán kịch bản<textarea id="transcriptText" rows="4" placeholder="朝、あなたはお茶を入れます。…"></textarea></label>
+<label>Tách cảnh<select id="split"><option value="sentences">Theo dấu kết câu (. ! ? 。！？)</option><option value="lines">Mỗi dòng không trống là một cảnh</option></select></label>
+<div class="row"><label>Ngôn ngữ<select id="language"><option value="ja">Tiếng Nhật</option><option value="vi">Tiếng Việt</option><option value="en">Tiếng Anh</option><option value="ko">Tiếng Hàn</option><option value="zh">Tiếng Trung</option><option value="">Tự nhận diện</option></select></label><label>Model<select id="model"><option value="small">Small · mặc định</option><option value="medium">Medium</option><option value="large-v3">Large v3</option></select></label></div>
+<label>Thiết bị<select id="device"><option value="auto">Tự chọn GPU / CPU</option><option value="cpu">CPU</option><option value="cuda">NVIDIA GPU (cần CUDA phù hợp)</option></select></label></div></div>
+<p id="modeHelp" class="muted"></p>
+<label class="check"><input id="fit" type="checkbox" checked> Scale to Frame Size · giữ trọn hình</label>
+<label>Chuyển động ảnh / video<select id="motion"><option value="auto" selected>Tự luân phiên 6 kiểu · SyncVideo-Audio</option><option value="none">Tắt chuyển động</option><option value="zoom_in">Zoom in · phóng to</option><option value="zoom_out">Zoom out · thu nhỏ</option><option value="pan_left_right">Dịch trái → phải</option><option value="pan_right_left">Dịch phải → trái</option><option value="pan_top_bottom">Dịch trên → dưới</option><option value="pan_bottom_top">Dịch dưới → trên</option></select></label>
+<label>Độ dài shot ảnh (giây)<input id="imageShotSeconds" type="number" min="0" max="60" step="1" value="6"></label>
+<p class="muted">Ảnh dài chia đều thành các shot khoảng 6 giây để đổi chuyển động; nhập 0 để giữ một clip mỗi ảnh. Zoom 8%; pan ±2,5% và phóng thêm 6%. Chỉnh keyframe tiếp trong Effect Controls → Motion.</p>
+<p class="muted">Scale to Frame Size giữ trọn hình; ảnh khác tỷ lệ sequence có thể còn viền khi zoom/pan.</p>
+<p class="muted">Video giữ tốc độ gốc; đoạn ngắn sẽ lặp, đoạn dài sẽ cắt. Âm thanh video nguồn được bỏ.</p>
+<label>Cách dựng timeline<select id="buildMode"><option value="turbo" selected>Theo lô · tối ưu tốc độ</option><option value="fast">Từng clip · như bản 0.3.1</option><option value="safe">Tương thích · kiểm tra đầy đủ từng bước</option></select></label>
+<p class="muted">Khi dựng theo lô, chờ hoàn tất rồi mới sửa timeline. Tool kiểm tra clip mới liên tục và kiểm tra toàn bộ tại các mốc và trước khi hoàn tất. Nếu gặp lỗi, chọn chế độ Tương thích và dựng sequence mới.</p>
+<label class="check"><input id="nativeCaptions" type="checkbox" checked> Tạo Caption Track gốc của Premiere</label>
+<p id="captionHelp" class="muted"></p>
+</section>
+<section><h2>03 <span>Kiểm tra trước khi dựng</span></h2>
+<p id="summary" class="muted">Bấm Phân tích để xem mỗi ảnh ứng với câu và thời gian nào.</p>
+<div id="captionPreviewWrap" hidden><p class="muted">Nội dung và thời gian caption đầu tiên · định dạng chữ chỉnh trong Premiere</p><pre id="captionPreview"></pre></div>
+<div id="warnings" class="warnings" hidden></div>
+<label id="acceptWrap" class="check" hidden><input id="accept" type="checkbox"> Tôi đã kiểm tra các cảnh có cảnh báo.</label>
+<div class="tableWrap"><table><thead><tr><th>#</th><th>Media / lời đọc</th><th>Mốc cảnh</th><th>Khớp chữ</th></tr></thead><tbody id="scenes"></tbody></table></div>
+<button id="openResults" class="secondary" disabled>Mở timeline JSON &amp; phụ đề SRT</button>
+</section>
+<details><summary>Nhật ký &amp; thiết lập</summary><p class="muted">Bộ cài tạo Python riêng. Lần nhận dạng đầu cần Internet để tải model; voice được xử lý trên máy.</p><label>Python riêng (tùy chọn)<input id="python" placeholder="Để trống để dùng bộ cài"></label><p><button id="copyLog">Sao chép nhật ký</button> <button id="resetSession">Kết thúc phiên bị gián đoạn</button></p><pre id="log"></pre></details>
+</main>
+<footer><div id="status" role="status">Sẵn sàng</div><progress id="progress" max="100" value="0"></progress><div class="actions"><button id="analyze">1. Phân tích</button><button id="build" class="primary" disabled>2. Dựng timeline</button><button id="stop" class="danger" disabled>Dừng</button></div><p class="muted">Tạo sequence mới · V1: ảnh/video · Caption Track: phụ đề · A1: voice</p></footer>
+<script src="panel.js"></script></body></html>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExtensionManifest Version="7.0" ExtensionBundleId="com.autosyncvoice.premiere" ExtensionBundleVersion="0.4.0" ExtensionBundleName="Auto Sync Voice">
+  <ExtensionList><Extension Id="com.autosyncvoice.premiere.panel" Version="0.4.0"/></ExtensionList>
+  <ExecutionEnvironment>
+    <HostList><Host Name="PPRO" Version="[14.0,26.99]"/></HostList>
+    <LocaleList><Locale Code="All"/></LocaleList>
+    <RequiredRuntimeList><RequiredRuntime Name="CSXS" Version="9.0"/></RequiredRuntimeList>
+  </ExecutionEnvironment>
+  <DispatchInfoList><Extension Id="com.autosyncvoice.premiere.panel"><DispatchInfo>
+    <Resources><MainPath>./index.html</MainPath><ScriptPath>./host.jsx</ScriptPath>
+      <CEFCommandLine><Parameter>--enable-nodejs</Parameter><Parameter>--mixed-context</Parameter></CEFCommandLine>
+    </Resources>
+    <Lifecycle><AutoVisible>true</AutoVisible></Lifecycle>
+    <UI><Type>Panel</Type><Menu>Auto Sync Voice</Menu><Geometry><Size><Width>520</Width><Height>800</Height></Size><MinSize><Width>360</Width><Height>400</Height></MinSize></Geometry></UI>
+  </DispatchInfo></Extension></DispatchInfoList>
+</ExtensionManifest>

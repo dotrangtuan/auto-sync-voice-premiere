@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+cep/runtime.json
+NHAT_KY_CAI_DAT.txt
+dist/
+
+installer/payload.zip
+installer/BuildInfo.cs
+installer/.build/
+*.log
